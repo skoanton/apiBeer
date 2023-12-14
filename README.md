@@ -34,7 +34,7 @@ async function getBeer() {
     }
 }
 
-getDogs();
+getBeer();
 ```
 
 ## Punk API
@@ -64,7 +64,7 @@ Ni ska bygga en öl-wiki som använder sig av data från [Punk API:et](https://p
 
 #### Beer Info Page
 - Sidan skall vara uppbyggd i typeScript 
-- Denna sida ska bara gå att vi någon av de sidorna som beskrivs ovan.
+- Denna sida ska bara gå att visa någon av de sidorna som beskrivs ovan.
 - På denna sida ska användaren kunna få detaljerad information om en specifik öl.
 - Sidan ska minst innehålla:
   - Description

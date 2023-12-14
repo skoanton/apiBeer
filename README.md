@@ -8,7 +8,7 @@
 ## Api'et
 
 ```javascript
-interface exempel {
+interface Exempel {
     age: number,
     breed: string,
     chipNumber: string,
@@ -19,12 +19,12 @@ interface exempel {
     sex: string
 }
 
-async function getDogs() {
+async function getBeer() {
     try {
-        const response = await fetch('https://my-json-server.typicode.com/zocom-christoffer-wallenberg/doggy-daycare-api/dogs');
+        const response = await fetch('beerURL');
         console.log(response);
         if (response.status === 200) {
-            const data: Dog[] = await response.json();
+            const data: Exempel[] = await response.json();
             console.log(data);
         } else {
             throw Error('Något gick fel, försök igen senare');

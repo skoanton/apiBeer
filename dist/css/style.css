@@ -1,0 +1,12 @@
+img{
+    height: 300px;
+}
+
+.flexbox-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap:2rem;
+    margin: 1rem;
+}

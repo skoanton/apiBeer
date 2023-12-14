@@ -4,7 +4,38 @@
 
 ## Instruktioner
 
-Utse en gruppledare som forkar det här repot och bjuder in de andra som collaborators.
+## bygg upp ditt interface eller type utifrån vad du får tillbaks från 
+## Api'et
+
+```javascript
+interface exempel {
+    age: number,
+    breed: string,
+    chipNumber: string,
+    img: string,
+    name: string,
+    owner: Owner,
+    present: boolean,
+    sex: string
+}
+
+async function getDogs() {
+    try {
+        const response = await fetch('https://my-json-server.typicode.com/zocom-christoffer-wallenberg/doggy-daycare-api/dogs');
+        console.log(response);
+        if (response.status === 200) {
+            const data: Dog[] = await response.json();
+            console.log(data);
+        } else {
+            throw Error('Något gick fel, försök igen senare');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+getDogs();
+```
 
 ## Punk API
 
@@ -32,7 +63,7 @@ Ni ska bygga en öl-wiki som använder sig av data från [Punk API:et](https://p
 ### Grund krav
 
 #### Beer Info Page
-
+- Sidan skall vara uppbyggd i typeScript 
 - Denna sida ska bara gå att vi någon av de sidorna som beskrivs ovan.
 - På denna sida ska användaren kunna få detaljerad information om en specifik öl.
 - Sidan ska minst innehålla:

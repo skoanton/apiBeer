@@ -32,11 +32,13 @@ const searchBtn = document.getElementById("searchBtn");
 const backButton = document.getElementById("back-button");
 const searchPreviousPageButton = document.getElementById("searchPreviousPageButton");
 const searchNextPageButton = document.getElementById("searchNextPageButton");
+const advancedSearchButton = document.getElementById("advancedSearch");
 //different Views
 const overviewEl = document.getElementById("overview");
 const searchView = document.getElementById("searchView");
 const infoView = document.getElementById("infoView");
-const views = [overviewEl, searchView, infoView];
+const advancedSearchView = document.getElementById("advancedSearchView");
+const views = [overviewEl, searchView, infoView, advancedSearchView];
 let currentId;
 let currentSearchWord;
 let currentPage = 1;
@@ -76,6 +78,9 @@ function addEventListners() {
     });
     searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.addEventListener("click", () => {
         switchPage(currentSearchWord, 0);
+    });
+    advancedSearchButton === null || advancedSearchButton === void 0 ? void 0 : advancedSearchButton.addEventListener("click", () => {
+        switchView(advancedSearchView);
     });
 }
 function addBeerInfo() {

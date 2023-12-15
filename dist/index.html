@@ -17,7 +17,8 @@
     <header class="flexbox-container search-box shadow"> 
         <button class="button" id="back-button">Home</button> 
         <input type="text" name="searchBar" id="searchBar" placeholder="search for bear here..">
-        <button class="button" id="searchBtn">Go</button>
+        <button class="button" id="searchBtn">Search</button>
+        <button class="button" id="advancedSearch">Advanced search</button>
         
     </header>
 
@@ -99,6 +100,23 @@
 
 
 
+    </article>
+
+    <article class="flexbox-container-col card hide shadow" id="advancedSearchView">
+        <label for="searchName">Name</label>
+        <input type="text" name="searchName" id="searchName">
+        <label for="searchName">Hops</label>
+        <input type="text" name="searchName" id="searchHops">
+        <label for="searchName">Malt</label>
+        <input type="text" name="searchName" id="searchHops">
+        <label for="abv">Abv</label>
+        <input type="number" min="0" max="100" value="0" id="abvMin" name="abvMin">        
+        <input type="number" min="0" max="100" value="100" id="abvMax" name="abvMax">
+        <label for="">Brew Year</label>
+        <input type="number" min="1900" max="2023" value="1900" id="brewYearMin" name="brewYearMin">        
+        <input type="number" min="1900" max="2023" value="2023" id="brewYearMax" name="brewYearMax">  
+        <button class="button">Search</button>
+    
     </article>
 
     <script src="./js/index.js"></script>

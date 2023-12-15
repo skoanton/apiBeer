@@ -20,19 +20,20 @@ const searchBar = <HTMLInputElement>document.getElementById("searchBar");
 const searchListEl: HTMLElement | null = document.getElementById("searchList");
 
 //Buttons
-const randBeerBtn: HTMLElement | null = document.getElementById("randBeerBtn");
-const seeMoreButton = <HTMLButtonElement>document.getElementById("seeMoreButton");
-const searchBtn: HTMLElement | null = document.getElementById("searchBtn");
-const backButton: HTMLElement | null = document.getElementById("back-button");
-const searchPreviousPageButton: HTMLElement | null = document.getElementById("searchPreviousPageButton");
-const searchNextPageButton: HTMLElement | null = document.getElementById("searchNextPageButton");
-
+const randBeerBtn  = document.getElementById("randBeerBtn") as HTMLButtonElement | null;
+const seeMoreButton = document.getElementById("seeMoreButton") as HTMLButtonElement | null
+const searchBtn = document.getElementById("searchBtn") as HTMLButtonElement | null;
+const backButton = document.getElementById("back-button") as HTMLButtonElement | null;
+const searchPreviousPageButton = document.getElementById("searchPreviousPageButton")as HTMLButtonElement | null;
+const searchNextPageButton = document.getElementById("searchNextPageButton")as HTMLButtonElement | null;
+const advancedSearchButton = document.getElementById("advancedSearch") as HTMLButtonElement | null;
 //different Views
 
 const overviewEl: HTMLElement | null = document.getElementById("overview");
 const searchView: HTMLElement | null = document.getElementById("searchView");
 const infoView: HTMLElement | null = document.getElementById("infoView");
-const views: HTMLElement[] | null = [overviewEl!, searchView!, infoView!];
+const advancedSearchView: HTMLElement | null = document.getElementById("advancedSearchView");
+const views: HTMLElement[] | null = [overviewEl!, searchView!, infoView!,advancedSearchView!];
 
 let currentId: number;
 let currentSearchWord: string | null;
@@ -107,6 +108,10 @@ function addEventListners() {
         
         switchPage(currentSearchWord, 0);
 
+    })
+
+    advancedSearchButton?.addEventListener("click", ()=>{
+        switchView(advancedSearchView)
     })
 
 }

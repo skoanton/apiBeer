@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,26 +10,98 @@
 
     <title>BerApi</title>
 </head>
+
 <body>
-    
-<article class="flexbox-container">
-    <form action="">
+
+
+    <header class="flexbox-container search-box shadow"> 
+        <button class="button" id="back-button">Home</button> 
         <input type="text" name="searchBar" id="searchBar" placeholder="search for bear here..">
-        <button id="searchBtn">Go</button>
-    </form>
-</article>
+        <button class="button" id="searchBtn">Go</button>
+        
+    </header>
 
-<article class="flexbox-container">
+    <article class="flexbox-container-col card shadow" id="overview">
 
-    <picture id="beerPicture"></picture>
-    <h2 id="beerName">ÖlNamn</h2>
+        <picture class="flexbox-container-col" id="beerPicture"></picture>
+        <h2 id="beerName">ÖlNamn</h2>
 
-   <button class="button">See more -></button>
-   <button id="randBeerBtn">Random Beer</button>
+        <button class="more-info-button" id="seeMoreButton">See more -></button>
+        <button class="button rand-beer-btn" id="randBeerBtn">Random Beer</button>
 
-</article>
+    </article>
+
+    <article class="flexbox-container-col hide shadow card" id="searchView">
+
+        <h2>Search result</h2>
+
+        <p class="hide" id="noSearchResult">no result</p>
+        <ul class="search-list" id="searchList">
+            <li><button class="link-button" id="1">Coffee Imperial Stout</button></li>
+        </ul>
+        <div class="flexbox-container">
+            <button id="searchPreviousPageButton">Previous page</button>
+            <button id="searchNextPageButton">Next page</button>
+        </div>
+        
+        
+
+    </article>
 
 
-<script src="./js/index.js"></script>
+    <article class="flexbox-container-col info-card hide shadow" id="infoView">
+        <picture class="flexbox-container-col"><img id="infoImage" src="" alt=""></picture>
+        
+        <h2 id="infoBeerName">Test</h2>
+        <h3 class="info-text info-text-left" id="infoBeerAbv">5,3%</h3>
+        <h3 class="info-text info-text-left" id="infoBeerVolume">20 liter</h3>
+        
+        <h3>Description</h3>
+        
+        <p id="infoBeerDescription">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur dignissimos
+            soluta, deserunt eveniet corrupti consequuntur reprehenderit est vel repellendus amet?</p>
+        <h3>Ingredients</h3>
+        <div class="grid-container">
+            <h4>Hops</h4>
+            <h4>Malt</h4>
+            <h4>Yeast</h4>
+        </div>
+        <div class="grid-container">
+            
+        <ul class="info-text-left" id="infoBeerIngridientsHops">
+            <li>ingridents 1</li>
+            <li>ingridents 1</li>
+        </ul>
+        
+        <ul class="info-text-left" id="infoBeerIngridientsMalt">
+            <li>ingridents 1</li>
+            <li>ingridents 1</li>
+            ¨
+        </ul>
+
+        
+        <ul class="info-text-left" id="infoBeerIngridientsYest">
+            <li>ingridents 1</li>
+            <li>ingridents 1</li>
+        </ul>
+        </div>
+        
+
+        <h3>Food Paring</h3>
+        <ul class="info-text-left" id="infoBeerFoodPairing">
+            <li>ingridents 1</li>
+            <li>ingridents 1</li>
+        </ul>
+
+        <h3>Brewers tips</h3>
+        <p id="infoBeerBrewerTips"></p>
+
+
+
+
+    </article>
+
+    <script src="./js/index.js"></script>
 </body>
+
 </html>

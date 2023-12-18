@@ -52,6 +52,7 @@ const advSearchBrewYearMax = document.getElementById("brewYearMax") as HTMLInput
 let currentId: number;
 let currentSearchWord: string | null;
 let currentPage: number | null = 1;
+let currentItterator = 0;
 let cachedData:{
     id:number,
     name: string,
@@ -105,7 +106,7 @@ function addEventListners() {
     });
 
     searchBtn?.addEventListener("click", () => {
-        searchForBeer(1);
+        searchForBeer();
     });
     seeMoreButton?.addEventListener("click", () => {
         
@@ -119,13 +120,22 @@ function addEventListners() {
 
     searchNextPageButton?.addEventListener("click", () => {
         
-        swichSearchPage(currentSearchWord, 1);
+        if(sessionStorage.length>=(10*currentPage!)){
+            console.log("fel fel fel");
+            console.log(sessionStorage.length);
+            currentPage!++;
+            currentItterator += 10;
+            populateSearchView();
+        }
+        
 
     })
 
     searchPreviousPageButton?.addEventListener("click", () => {
-        
-        swichSearchPage(currentSearchWord, 0);
+       
+        currentPage!--;
+        currentItterator -= 10;
+        populateSearchView();
 
     })
 
@@ -134,13 +144,12 @@ function addEventListners() {
     })
 
     searchAdvButton?.addEventListener("click", () =>{
-        searchForBeer(1);
+        searchForBeer();
     })
 
 }
 
-async function addBeerInfo() {
-    
+async function addBeerInfo() {   
 
     const imgEl = document.createElement("img");
 
@@ -177,8 +186,6 @@ function switchView(ElementToShow: HTMLElement | null) {
     });
 
     ElementToShow?.classList.remove("hide");
-
-
 
 }
 
@@ -259,17 +266,26 @@ function populateSearchView() {
         searchListEl.firstChild.remove();
     }
 
-
-
-
-    if (sessionStorage.length > 0) {
-        for(let i = 0; i<10; i++){
-            let buttonEl = document.createElement("button");
-            let tempId = sessionStorage[i].getItem(sessionStorage[i].key!);
-            console.log(tempId);
-            buttonEl.setAttribute("id", tempId!);
-
-
+    if (sessionStorage.length > 0 && sessionStorage) {
+        for(let i = currentItterator; i<(10*currentPage!); i++){
+            if(i > sessionStorage.length){
+                console.log("avbryter for loop");
+                break;
+            }
+            let liEl = document.createElement("li");
+            let buttonEl = document.createElement("button");      
+            let tempKey = sessionStorage.key(i);
+            let tempId = sessionStorage.getItem(tempKey!);
+            buttonEl.setAttribute("id", tempKey!);
+            buttonEl.classList.add("link-button");
+            buttonEl.innerHTML = tempId!;
+            buttonEl.addEventListener("click", () => {
+                switchView(infoView);
+                currentId = Number(buttonEl.getAttribute("id"));
+                populateInfoView();
+            })
+            liEl.appendChild(buttonEl);
+            searchListEl?.appendChild(liEl);
 
             /* Object.keys(sessionStorage).forEach(key => {
                 let liEl = document.createElement("li");
@@ -310,13 +326,12 @@ function removeCurrentInfo() {
         infoBeerFoodPairing.firstChild.remove();
     }
 
-
 }
 
-async function swichSearchPage(searchWord: string | null, nr: number | null) {
+/* async function swichSearchPage(searchWord: string | null) {
 
 
-    switch (nr) {
+     switch (nr) {
         case 1:
             currentPage!++;
             break;
@@ -326,14 +341,12 @@ async function swichSearchPage(searchWord: string | null, nr: number | null) {
         default:
             console.error("can´t switch view");
             break;
-    }
-    
+    } 
+          
         
-        
-    if(currentPage! > 0 && cachedData!.length > 0 ){
+    if(currentPage! > 0 && sessionStorage!.length > 0 ){
         populateSearchView();
     }
-
     else{
         switch (nr) {
             case 1:
@@ -349,7 +362,7 @@ async function swichSearchPage(searchWord: string | null, nr: number | null) {
     }
 
     
-}
+} */
 
 function checkLength(maxLength: number | null,urlLength: number | null, serachUrl: string | null):string{
     if(urlLength! > maxLength!){
@@ -359,8 +372,17 @@ function checkLength(maxLength: number | null,urlLength: number | null, serachUr
     return serachUrl!;
 }
 
-async function searchForBeer(pageNumber: number | null) {
+async function searchForBeer() {
     
+
+    if(sessionStorage.length > 0 && sessionStorage){
+        console.log("inside ifsats");
+       Object.keys(sessionStorage).forEach(key => {
+            console.log("removing storage");
+            sessionStorage.removeItem(key);
+       });
+    }
+
     let searchURL:string | undefined = `${BASE_URL}beers?`;
     let maxLength: number | null = searchURL.length;
 
@@ -427,9 +449,6 @@ async function searchForBeer(pageNumber: number | null) {
             console.log("foor loop");
             sessionStorage.setItem(data[i].id.toString(), data[i].name);
         }       
-        Object.keys(sessionStorage).forEach(key => {
-            console.log(sessionStorage.getItem(key));
-            });
         
         switchView(searchView);
         populateSearchView();

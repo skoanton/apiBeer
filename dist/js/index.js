@@ -51,6 +51,7 @@ const advSearchBrewYearMax = document.getElementById("brewYearMax");
 let currentId;
 let currentSearchWord;
 let currentPage = 1;
+let currentItterator = 0;
 let cachedData = [];
 function grabBeer(URL) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -74,7 +75,7 @@ function addEventListners() {
         addBeerInfo();
     });
     searchBtn === null || searchBtn === void 0 ? void 0 : searchBtn.addEventListener("click", () => {
-        searchForBeer(1);
+        searchForBeer();
     });
     seeMoreButton === null || seeMoreButton === void 0 ? void 0 : seeMoreButton.addEventListener("click", () => {
         switchView(infoView);
@@ -84,16 +85,24 @@ function addEventListners() {
         switchView(overviewEl);
     });
     searchNextPageButton === null || searchNextPageButton === void 0 ? void 0 : searchNextPageButton.addEventListener("click", () => {
-        swichSearchPage(currentSearchWord, 1);
+        if (sessionStorage.length >= (10 * currentPage)) {
+            console.log("fel fel fel");
+            console.log(sessionStorage.length);
+            currentPage++;
+            currentItterator += 10;
+            populateSearchView();
+        }
     });
     searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.addEventListener("click", () => {
-        swichSearchPage(currentSearchWord, 0);
+        currentPage--;
+        currentItterator -= 10;
+        populateSearchView();
     });
     advancedSearchButton === null || advancedSearchButton === void 0 ? void 0 : advancedSearchButton.addEventListener("click", () => {
         switchView(advancedSearchView);
     });
     searchAdvButton === null || searchAdvButton === void 0 ? void 0 : searchAdvButton.addEventListener("click", () => {
-        searchForBeer(1);
+        searchForBeer();
     });
 }
 function addBeerInfo() {
@@ -187,12 +196,26 @@ function populateSearchView() {
     while (searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.firstChild) {
         searchListEl.firstChild.remove();
     }
-    if (sessionStorage.length > 0) {
-        for (let i = 0; i < 10; i++) {
+    if (sessionStorage.length > 0 && sessionStorage) {
+        for (let i = currentItterator; i < (10 * currentPage); i++) {
+            if (i > sessionStorage.length) {
+                console.log("avbryter for loop");
+                break;
+            }
+            let liEl = document.createElement("li");
             let buttonEl = document.createElement("button");
-            let tempId = sessionStorage[i].getItem(sessionStorage[i].key);
-            console.log(tempId);
-            buttonEl.setAttribute("id", tempId);
+            let tempKey = sessionStorage.key(i);
+            let tempId = sessionStorage.getItem(tempKey);
+            buttonEl.setAttribute("id", tempKey);
+            buttonEl.classList.add("link-button");
+            buttonEl.innerHTML = tempId;
+            buttonEl.addEventListener("click", () => {
+                switchView(infoView);
+                currentId = Number(buttonEl.getAttribute("id"));
+                populateInfoView();
+            });
+            liEl.appendChild(buttonEl);
+            searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.appendChild(liEl);
             /* Object.keys(sessionStorage).forEach(key => {
                 let liEl = document.createElement("li");
                 let buttonEl = document.createElement("button");
@@ -224,46 +247,57 @@ function removeCurrentInfo() {
         infoBeerFoodPairing.firstChild.remove();
     }
 }
-function swichSearchPage(searchWord, nr) {
-    return __awaiter(this, void 0, void 0, function* () {
+/* async function swichSearchPage(searchWord: string | null) {
+
+
+     switch (nr) {
+        case 1:
+            currentPage!++;
+            break;
+        case 0:
+            currentPage!--;
+            break;
+        default:
+            console.error("can´t switch view");
+            break;
+    }
+          
+        
+    if(currentPage! > 0 && sessionStorage!.length > 0 ){
+        populateSearchView();
+    }
+    else{
         switch (nr) {
             case 1:
-                currentPage++;
+                    currentPage!--;
                 break;
             case 0:
-                currentPage--;
+                currentPage!++;
                 break;
             default:
-                console.error("can´t switch view");
+                console.error("wrong with switching page");
                 break;
         }
-        if (currentPage > 0 && cachedData.length > 0) {
-            populateSearchView();
-        }
-        else {
-            switch (nr) {
-                case 1:
-                    currentPage--;
-                    break;
-                case 0:
-                    currentPage++;
-                    break;
-                default:
-                    console.error("wrong with switching page");
-                    break;
-            }
-        }
-    });
-}
+    }
+
+    
+} */
 function checkLength(maxLength, urlLength, serachUrl) {
     if (urlLength > maxLength) {
         serachUrl += "&";
     }
     return serachUrl;
 }
-function searchForBeer(pageNumber) {
+function searchForBeer() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        if (sessionStorage.length > 0 && sessionStorage) {
+            console.log("inside ifsats");
+            Object.keys(sessionStorage).forEach(key => {
+                console.log("removing storage");
+                sessionStorage.removeItem(key);
+            });
+        }
         let searchURL = `${BASE_URL}beers?`;
         let maxLength = searchURL.length;
         if (searchBar === null || searchBar === void 0 ? void 0 : searchBar.value) {
@@ -318,9 +352,6 @@ function searchForBeer(pageNumber) {
                 console.log("foor loop");
                 sessionStorage.setItem(data[i].id.toString(), data[i].name);
             }
-            Object.keys(sessionStorage).forEach(key => {
-                console.log(sessionStorage.getItem(key));
-            });
             switchView(searchView);
             populateSearchView();
         }

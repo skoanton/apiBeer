@@ -347,9 +347,9 @@ function searchForBeer() {
         console.log(searchURL);
         let data = yield grabBeer(searchURL);
         console.log(data);
-        if (data && data.length > 0) {
+        if (data.length > 0) {
             for (let i = 0; i < data.length; i++) {
-                console.log("foor loop");
+                console.log("adding to storage");
                 sessionStorage.setItem(data[i].id.toString(), data[i].name);
             }
             switchView(searchView);
@@ -357,6 +357,7 @@ function searchForBeer() {
         }
         else {
             (_a = document.getElementById("noSearchResult")) === null || _a === void 0 ? void 0 : _a.classList.remove("hide");
+            window.alert("no search result");
         }
     });
 }

@@ -47,8 +47,6 @@ const advSearchAbvMax = document.getElementById("abvMax") as HTMLInputElement | 
 const advSearchBrewYearMin = document.getElementById("brewYearMin") as HTMLInputElement | null;
 const advSearchBrewYearMax = document.getElementById("brewYearMax") as HTMLInputElement | null;
 
-
-
 let currentId: number;
 let currentSearchWord: string | null;
 let currentPage: number | null = 1;
@@ -273,7 +271,7 @@ function populateSearchView() {
                 break;
             }
             let liEl = document.createElement("li");
-            let buttonEl = document.createElement("button");      
+            let buttonEl = document.createElement("button");   
             let tempKey = sessionStorage.key(i);
             let tempId = sessionStorage.getItem(tempKey!);
             buttonEl.setAttribute("id", tempKey!);
@@ -442,12 +440,11 @@ async function searchForBeer() {
     let data = await grabBeer(searchURL);
 
     console.log(data);
-    if (data && data.length > 0) {
+    if (data!.length > 0) {
 
-        
-        for(let i = 0; i < data.length; i++){
-            console.log("foor loop");
-            sessionStorage.setItem(data[i].id.toString(), data[i].name);
+        for(let i = 0; i < data!.length; i++){
+            console.log("adding to storage");
+            sessionStorage.setItem(data![i].id.toString(), data![i].name);
         }       
         
         switchView(searchView);
@@ -457,6 +454,7 @@ async function searchForBeer() {
 
     else {
         document.getElementById("noSearchResult")?.classList.remove("hide");
+        window.alert("no search result");
     } 
 
 }

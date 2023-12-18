@@ -33,6 +33,7 @@ const backButton = document.getElementById("back-button");
 const searchPreviousPageButton = document.getElementById("searchPreviousPageButton");
 const searchNextPageButton = document.getElementById("searchNextPageButton");
 const advancedSearchButton = document.getElementById("advancedSearch");
+const searchAdvButton = document.getElementById("advSearchButton");
 //different Views
 const overviewEl = document.getElementById("overview");
 const searchView = document.getElementById("searchView");
@@ -72,7 +73,7 @@ function addEventListners() {
         addBeerInfo();
     });
     searchBtn === null || searchBtn === void 0 ? void 0 : searchBtn.addEventListener("click", () => {
-        searchForBeer(searchBar.value);
+        searchForBeer();
     });
     seeMoreButton === null || seeMoreButton === void 0 ? void 0 : seeMoreButton.addEventListener("click", () => {
         switchView(infoView);
@@ -89,6 +90,9 @@ function addEventListners() {
     });
     advancedSearchButton === null || advancedSearchButton === void 0 ? void 0 : advancedSearchButton.addEventListener("click", () => {
         switchView(advancedSearchView);
+    });
+    searchAdvButton === null || searchAdvButton === void 0 ? void 0 : searchAdvButton.addEventListener("click", () => {
+        searchForBeer();
     });
 }
 function addBeerInfo() {
@@ -172,12 +176,14 @@ function populateInfoView() {
 }
 function populateSearchView(data) {
     return __awaiter(this, void 0, void 0, function* () {
+        //hiding back button in searchview isf needed
         if (currentPage === 1) {
             searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.add("hide");
         }
         else {
             searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.remove("hide");
         }
+        //removing old info in list
         while (searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.firstChild) {
             searchListEl.firstChild.remove();
         }
@@ -245,14 +251,67 @@ function switchPage(searchWord, nr) {
         }
     });
 }
-function searchForBeer(searchWord) {
+function checkLength(maxLength, urlLength, serachUrl) {
+    if (urlLength > maxLength) {
+        serachUrl += "&";
+    }
+    return serachUrl;
+}
+function searchForBeer() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        let data = yield grabBeer(`${BASE_URL}beers?beer_name=${searchWord}&per_page=10`);
+        let searchURL = `${BASE_URL}beers?`;
+        let maxLength = searchURL.length;
+        if (searchBar === null || searchBar === void 0 ? void 0 : searchBar.value) {
+            console.log("normal serach bar");
+            searchURL += `beer_name=${searchBar.value}`;
+            currentSearchWord = searchBar.value;
+            searchBar.value = "";
+        }
+        if (advSearchName === null || advSearchName === void 0 ? void 0 : advSearchName.value) {
+            console.log("adv serach bar");
+            searchURL += `beer_name=${advSearchName.value}`;
+            currentSearchWord = advSearchName === null || advSearchName === void 0 ? void 0 : advSearchName.value;
+            advSearchName.value = "";
+        }
+        if (advSearchHops === null || advSearchHops === void 0 ? void 0 : advSearchHops.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            console.log("adv serach bar hops");
+            searchURL += `hops=${advSearchHops.value}`;
+            advSearchHops.value = "";
+        }
+        if (advSearchMalt === null || advSearchMalt === void 0 ? void 0 : advSearchMalt.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            searchURL += `malt=${advSearchMalt.value}`;
+            advSearchMalt.value = "";
+        }
+        if (advSearchAbvMin === null || advSearchAbvMin === void 0 ? void 0 : advSearchAbvMin.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            searchURL += `abv_gt=${advSearchAbvMin.value}`;
+            advSearchAbvMin.value = "";
+        }
+        if (advSearchAbvMax === null || advSearchAbvMax === void 0 ? void 0 : advSearchAbvMax.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            searchURL += `abv_lt=${advSearchAbvMax}`;
+            advSearchAbvMax.value = "";
+        }
+        if (advSearchBrewYearMin === null || advSearchBrewYearMin === void 0 ? void 0 : advSearchBrewYearMin.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            searchURL += `brewed_after=${advSearchBrewYearMin}`;
+            advSearchBrewYearMin.value = "";
+        }
+        if (advSearchBrewYearMax === null || advSearchBrewYearMax === void 0 ? void 0 : advSearchBrewYearMax.value) {
+            searchURL = checkLength(maxLength, searchURL.length, searchURL);
+            searchURL += `brewed_before${advSearchBrewYearMax}`;
+            advSearchBrewYearMax.value = "";
+        }
+        searchURL += "&per_page=10";
+        console.log(searchURL);
+        let data = yield grabBeer(searchURL);
+        console.log(data);
         if (data && data.length > 0) {
             switchView(searchView);
             populateSearchView(data);
-            currentSearchWord = searchWord;
         }
         else {
             (_a = document.getElementById("noSearchResult")) === null || _a === void 0 ? void 0 : _a.classList.remove("hide");

@@ -14,7 +14,7 @@ const infoBeerBrewerTips: HTMLElement | null = document.getElementById("infoBeer
 //overview elements
 const beerPictureEL: HTMLElement | null = document.getElementById("beerPicture");
 const beerText: HTMLElement | null = document.getElementById("beerName");
-const searchBar = <HTMLInputElement>document.getElementById("searchBar");
+const searchBar = document.getElementById("searchBar") as HTMLInputElement | null;
 
 //Search elements
 const searchListEl: HTMLElement | null = document.getElementById("searchList");
@@ -27,6 +27,7 @@ const backButton = document.getElementById("back-button") as HTMLButtonElement |
 const searchPreviousPageButton = document.getElementById("searchPreviousPageButton")as HTMLButtonElement | null;
 const searchNextPageButton = document.getElementById("searchNextPageButton")as HTMLButtonElement | null;
 const advancedSearchButton = document.getElementById("advancedSearch") as HTMLButtonElement | null;
+const searchAdvButton = document.getElementById("advSearchButton") as HTMLInputElement | null;
 //different Views
 
 const overviewEl: HTMLElement | null = document.getElementById("overview");
@@ -99,7 +100,7 @@ function addEventListners() {
     });
 
     searchBtn?.addEventListener("click", () => {
-        searchForBeer(searchBar!.value);
+        searchForBeer();
     });
     seeMoreButton?.addEventListener("click", () => {
         
@@ -125,6 +126,10 @@ function addEventListners() {
 
     advancedSearchButton?.addEventListener("click", ()=>{
         switchView(advancedSearchView)
+    })
+
+    searchAdvButton?.addEventListener("click", () =>{
+        searchForBeer();
     })
 
 }
@@ -234,6 +239,8 @@ async function populateInfoView() {
 }
 
 async function populateSearchView(data: BeerInfo[]) {
+
+    //hiding back button in searchview isf needed
     if(currentPage === 1){
         
         searchPreviousPageButton?.classList.add("hide");
@@ -242,9 +249,11 @@ async function populateSearchView(data: BeerInfo[]) {
         searchPreviousPageButton?.classList.remove("hide");
     }
     
+    //removing old info in list
     while (searchListEl?.firstChild) {
         searchListEl.firstChild.remove();
     }
+
     if (data && data.length > 0) {
         data.forEach(data => {
             let liEl = document.createElement("li");
@@ -327,18 +336,83 @@ async function switchPage(searchWord: string | null, nr: number | null) {
     
 }
 
-async function searchForBeer(searchWord: string | null) {
-    let data = await grabBeer(`${BASE_URL}beers?beer_name=${searchWord}&per_page=10`);
+function checkLength(maxLength: number | null,urlLength: number | null, serachUrl: string | null):string{
+    if(urlLength! > maxLength!){
+        serachUrl += "&";
+    }
 
+    return serachUrl!;
+}
+
+async function searchForBeer() {
+    
+    let searchURL:string | undefined = `${BASE_URL}beers?`;
+    let maxLength: number | null = searchURL.length;
+
+    if(searchBar?.value){
+        console.log("normal serach bar");
+        searchURL += `beer_name=${searchBar.value}`;
+        currentSearchWord = searchBar.value;
+        searchBar.value = "";
+    }
+
+    if(advSearchName?.value){ 
+        console.log("adv serach bar");
+        searchURL += `beer_name=${advSearchName.value}`;
+        currentSearchWord = advSearchName?.value;
+        advSearchName.value = "";
+    }
+
+    if(advSearchHops?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        console.log("adv serach bar hops");
+        searchURL += `hops=${advSearchHops.value}`;
+        advSearchHops.value = "";
+    }
+
+    if(advSearchMalt?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        searchURL += `malt=${advSearchMalt.value}`;
+        advSearchMalt.value ="";
+    }
+
+    if(advSearchAbvMin?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        searchURL += `abv_gt=${advSearchAbvMin.value}`;
+        advSearchAbvMin.value = "";
+    }
+
+    if(advSearchAbvMax?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        searchURL += `abv_lt=${advSearchAbvMax}`;
+        advSearchAbvMax.value = "";
+    }
+
+    if(advSearchBrewYearMin?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        searchURL += `brewed_after=${advSearchBrewYearMin}`;
+        advSearchBrewYearMin.value ="";
+    }
+
+    if(advSearchBrewYearMax?.value){
+        searchURL = checkLength(maxLength,searchURL.length,searchURL);
+        searchURL += `brewed_before${advSearchBrewYearMax}`;
+        advSearchBrewYearMax.value ="";
+    }
+    searchURL +="&per_page=10" 
+    console.log(searchURL);
+    let data = await grabBeer(searchURL);
+    
+    console.log(data);
     if (data && data.length > 0) {
         switchView(searchView);
         populateSearchView(data);
-        currentSearchWord = searchWord;
+        
     }
 
     else {
         document.getElementById("noSearchResult")?.classList.remove("hide");
-    }
+    } 
 
 }
 

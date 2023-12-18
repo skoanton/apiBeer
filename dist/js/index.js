@@ -39,6 +39,14 @@ const searchView = document.getElementById("searchView");
 const infoView = document.getElementById("infoView");
 const advancedSearchView = document.getElementById("advancedSearchView");
 const views = [overviewEl, searchView, infoView, advancedSearchView];
+//advanced search
+const advSearchName = document.getElementById("searchName");
+const advSearchHops = document.getElementById("searchHops");
+const advSearchMalt = document.getElementById("searchMalt");
+const advSearchAbvMin = document.getElementById("abvMin");
+const advSearchAbvMax = document.getElementById("abvMax");
+const advSearchBrewYearMin = document.getElementById("brewYearMin");
+const advSearchBrewYearMax = document.getElementById("brewYearMax");
 let currentId;
 let currentSearchWord;
 let currentPage = 1;
@@ -215,7 +223,7 @@ function switchPage(searchWord, nr) {
                 currentPage--;
                 break;
             default:
-                console.error("hello");
+                console.error("can´t switch view");
                 break;
         }
         let data = yield grabBeer(`${BASE_URL}beers?beer_name=${searchWord}&page=${currentPage}&per_page=10`);
@@ -231,7 +239,7 @@ function switchPage(searchWord, nr) {
                     currentPage++;
                     break;
                 default:
-                    console.error("woops");
+                    console.error("wrong with switching page");
                     break;
             }
         }

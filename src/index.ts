@@ -36,6 +36,18 @@ const advancedSearchView: HTMLElement | null = document.getElementById("advanced
 const views: HTMLElement[] | null = [overviewEl!, searchView!, infoView!,advancedSearchView!];
 
 
+//advanced search
+
+const advSearchName = document.getElementById("searchName") as HTMLInputElement | null;
+const advSearchHops = document.getElementById("searchHops") as HTMLInputElement | null;
+const advSearchMalt = document.getElementById("searchMalt") as HTMLInputElement | null;
+const advSearchAbvMin = document.getElementById("abvMin") as HTMLInputElement | null;
+const advSearchAbvMax = document.getElementById("abvMax") as HTMLInputElement | null;
+const advSearchBrewYearMin = document.getElementById("brewYearMin") as HTMLInputElement | null;
+const advSearchBrewYearMax = document.getElementById("brewYearMax") as HTMLInputElement | null;
+
+
+
 let currentId: number;
 let currentSearchWord: string | null;
 let currentPage: number | null = 1;
@@ -284,7 +296,7 @@ async function switchPage(searchWord: string | null, nr: number | null) {
             currentPage!--;
             break;
         default:
-            console.error("hello");
+            console.error("can´t switch view");
             break;
     }
 
@@ -307,7 +319,7 @@ async function switchPage(searchWord: string | null, nr: number | null) {
                 currentPage!++;
                 break;
             default:
-                console.error("woops");
+                console.error("wrong with switching page");
                 break;
         }
     }

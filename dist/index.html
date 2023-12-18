@@ -105,18 +105,18 @@
 
     <article class="flexbox-container-col card hide shadow" id="advancedSearchView">
         <label for="searchName">Name</label>
-        <input type="text" name="searchName" id="searchName">
+        <input type="search" name="searchName" id="searchName">
         <label for="searchName">Hops</label>
-        <input type="text" name="searchName" id="searchHops">
+        <input type="search" name="searchName" id="searchHops">
         <label for="searchName">Malt</label>
-        <input type="text" name="searchName" id="searchHops">
+        <input type="search" name="searchName" id="searchMalt">
         <label for="abv">Abv</label>
-        <input type="number" min="0" max="100" value="0" id="abvMin" name="abvMin">        
-        <input type="number" min="0" max="100" value="100" id="abvMax" name="abvMax">
+        <input type="number" min="0" max="100" placeholder="min" id="abvMin" name="abvMin">        
+        <input type="number" min="0" max="100" placeholder="max" id="abvMax" name="abvMax">
         <label for="">Brew Year</label>
-        <input type="number" min="1900" max="2023" value="1900" id="brewYearMin" name="brewYearMin">        
-        <input type="number" min="1900" max="2023" value="2023" id="brewYearMax" name="brewYearMax">  
-        <button class="button">Search</button>
+        <input type="number" min="1900" max="2023"  id="brewYearMin" name="brewYearMin" placeholder="min">        
+        <input type="number" min="1900" max="2023"  id="brewYearMax" name="brewYearMax" placeholder="max">  
+        <button class="button" id="advSearchButton">Search</button>
     
     </article>
 

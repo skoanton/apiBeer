@@ -51,6 +51,7 @@ const advSearchBrewYearMax = document.getElementById("brewYearMax");
 let currentId;
 let currentSearchWord;
 let currentPage = 1;
+let cachedData = [];
 function grabBeer(URL) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -83,10 +84,10 @@ function addEventListners() {
         switchView(overviewEl);
     });
     searchNextPageButton === null || searchNextPageButton === void 0 ? void 0 : searchNextPageButton.addEventListener("click", () => {
-        switchPage(currentSearchWord, 1);
+        swichSearchPage(currentSearchWord, 1);
     });
     searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.addEventListener("click", () => {
-        switchPage(currentSearchWord, 0);
+        swichSearchPage(currentSearchWord, 0);
     });
     advancedSearchButton === null || advancedSearchButton === void 0 ? void 0 : advancedSearchButton.addEventListener("click", () => {
         switchView(advancedSearchView);
@@ -174,36 +175,34 @@ function populateInfoView() {
         }
     });
 }
-function populateSearchView(data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        //hiding back button in searchview isf needed
-        if (currentPage === 1) {
-            searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.add("hide");
-        }
-        else {
-            searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.remove("hide");
-        }
-        //removing old info in list
-        while (searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.firstChild) {
-            searchListEl.firstChild.remove();
-        }
-        if (data && data.length > 0) {
-            data.forEach(data => {
-                let liEl = document.createElement("li");
-                let buttonEl = document.createElement("button");
-                buttonEl.setAttribute("id", data.id.toString());
-                buttonEl.classList.add("link-button");
-                buttonEl.innerHTML = data.name;
-                buttonEl.addEventListener("click", () => {
-                    switchView(infoView);
-                    currentId = Number(buttonEl.getAttribute("id"));
-                    populateInfoView();
-                });
-                liEl.appendChild(buttonEl);
-                searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.appendChild(liEl);
+function populateSearchView() {
+    //hiding back button in searchview isf needed
+    if (currentPage === 1) {
+        searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.add("hide");
+    }
+    else {
+        searchPreviousPageButton === null || searchPreviousPageButton === void 0 ? void 0 : searchPreviousPageButton.classList.remove("hide");
+    }
+    //removing old info in list
+    while (searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.firstChild) {
+        searchListEl.firstChild.remove();
+    }
+    if (cachedData.length > 0) {
+        cachedData.forEach(data => {
+            let liEl = document.createElement("li");
+            let buttonEl = document.createElement("button");
+            buttonEl.setAttribute("id", data.id.toString());
+            buttonEl.classList.add("link-button");
+            buttonEl.innerHTML = data.name;
+            buttonEl.addEventListener("click", () => {
+                switchView(infoView);
+                currentId = Number(buttonEl.getAttribute("id"));
+                populateInfoView();
             });
-        }
-    });
+            liEl.appendChild(buttonEl);
+            searchListEl === null || searchListEl === void 0 ? void 0 : searchListEl.appendChild(liEl);
+        });
+    }
 }
 function removeCurrentInfo() {
     while (infoBeerIngridentsHops === null || infoBeerIngridentsHops === void 0 ? void 0 : infoBeerIngridentsHops.firstChild) {
@@ -219,7 +218,7 @@ function removeCurrentInfo() {
         infoBeerFoodPairing.firstChild.remove();
     }
 }
-function switchPage(searchWord, nr) {
+function swichSearchPage(searchWord, nr) {
     return __awaiter(this, void 0, void 0, function* () {
         switch (nr) {
             case 1:
@@ -232,9 +231,8 @@ function switchPage(searchWord, nr) {
                 console.error("can´t switch view");
                 break;
         }
-        let data = yield grabBeer(`${BASE_URL}beers?beer_name=${searchWord}&page=${currentPage}&per_page=10`);
-        if (currentPage > 0 && data.length > 0) {
-            populateSearchView(data);
+        if (currentPage > 0 && cachedData.length > 0) {
+            populateSearchView();
         }
         else {
             switch (nr) {
@@ -305,13 +303,20 @@ function searchForBeer() {
             searchURL += `brewed_before${advSearchBrewYearMax}`;
             advSearchBrewYearMax.value = "";
         }
-        searchURL += "&per_page=10";
+        /* searchURL +="&per_page=10"  */
         console.log(searchURL);
         let data = yield grabBeer(searchURL);
         console.log(data);
         if (data && data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                console.log("foor loop");
+                const newData = { id: data[i].id, name: data[i].name };
+                console.log(newData);
+                cachedData.push(newData);
+            }
+            console.log(cachedData);
             switchView(searchView);
-            populateSearchView(data);
+            populateSearchView();
         }
         else {
             (_a = document.getElementById("noSearchResult")) === null || _a === void 0 ? void 0 : _a.classList.remove("hide");

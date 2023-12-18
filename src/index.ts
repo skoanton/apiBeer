@@ -52,6 +52,10 @@ const advSearchBrewYearMax = document.getElementById("brewYearMax") as HTMLInput
 let currentId: number;
 let currentSearchWord: string | null;
 let currentPage: number | null = 1;
+let cachedData:{
+    id:number,
+    name: string,
+}[] = [];
 
 interface BeerInfo {
     id: number;
@@ -72,6 +76,7 @@ interface BeerInfo {
     brewers_tips: string;
 
 }
+
 
 async function grabBeer(URL: RequestInfo) {
     
@@ -114,13 +119,13 @@ function addEventListners() {
 
     searchNextPageButton?.addEventListener("click", () => {
         
-        switchPage(currentSearchWord, 1);
+        swichSearchPage(currentSearchWord, 1);
 
     })
 
     searchPreviousPageButton?.addEventListener("click", () => {
         
-        switchPage(currentSearchWord, 0);
+        swichSearchPage(currentSearchWord, 0);
 
     })
 
@@ -238,7 +243,7 @@ async function populateInfoView() {
     }
 }
 
-async function populateSearchView(data: BeerInfo[]) {
+function populateSearchView() {
 
     //hiding back button in searchview isf needed
     if(currentPage === 1){
@@ -254,8 +259,11 @@ async function populateSearchView(data: BeerInfo[]) {
         searchListEl.firstChild.remove();
     }
 
-    if (data && data.length > 0) {
-        data.forEach(data => {
+
+    
+
+    if (cachedData.length > 0) {
+        cachedData.forEach(data => {
             let liEl = document.createElement("li");
             let buttonEl = document.createElement("button");
             buttonEl.setAttribute("id", data.id.toString());
@@ -294,7 +302,7 @@ function removeCurrentInfo() {
 
 }
 
-async function switchPage(searchWord: string | null, nr: number | null) {
+async function swichSearchPage(searchWord: string | null, nr: number | null) {
 
 
     switch (nr) {
@@ -308,15 +316,11 @@ async function switchPage(searchWord: string | null, nr: number | null) {
             console.error("can´t switch view");
             break;
     }
-
-  
-    
-    let data = await grabBeer(`${BASE_URL}beers?beer_name=${searchWord}&page=${currentPage}&per_page=10`);
     
         
         
-    if(currentPage! > 0 && data!.length > 0 ){
-        populateSearchView(data!);
+    if(currentPage! > 0 && cachedData!.length > 0 ){
+        populateSearchView();
     }
 
     else{
@@ -399,14 +403,23 @@ async function searchForBeer() {
         searchURL += `brewed_before${advSearchBrewYearMax}`;
         advSearchBrewYearMax.value ="";
     }
-    searchURL +="&per_page=10" 
+    /* searchURL +="&per_page=10"  */
     console.log(searchURL);
     let data = await grabBeer(searchURL);
-    
+
     console.log(data);
     if (data && data.length > 0) {
-        switchView(searchView);
-        populateSearchView(data);
+
+        
+        for(let i = 0; i < data.length; i++){
+            console.log("foor loop");
+            const newData = {id: data[i].id, name:data[i].name};
+            console.log(newData);
+            cachedData!.push(newData);
+        }       
+        console.log(cachedData)
+        switchView(searchView)
+        populateSearchView();
         
     }
 

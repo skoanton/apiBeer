@@ -35,6 +35,7 @@ const infoView: HTMLElement | null = document.getElementById("infoView");
 const advancedSearchView: HTMLElement | null = document.getElementById("advancedSearchView");
 const views: HTMLElement[] | null = [overviewEl!, searchView!, infoView!,advancedSearchView!];
 
+
 let currentId: number;
 let currentSearchWord: string | null;
 let currentPage: number | null = 1;

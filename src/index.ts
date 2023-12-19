@@ -105,7 +105,7 @@ function addEventListners() {
     });
 
     searchBtn?.addEventListener("click", () => {
-        searchForBeer();
+        searchForBeer(1);
     });
     seeMoreButton?.addEventListener("click", () => {
         
@@ -134,7 +134,7 @@ function addEventListners() {
     })
 
     searchAdvButton?.addEventListener("click", () =>{
-        searchForBeer();
+        searchForBeer(1);
     })
 
 }
@@ -260,23 +260,34 @@ function populateSearchView() {
     }
 
 
-    
 
-    if (cachedData.length > 0) {
-        cachedData.forEach(data => {
-            let liEl = document.createElement("li");
+
+    if (sessionStorage.length > 0) {
+        for(let i = 0; i<10; i++){
             let buttonEl = document.createElement("button");
-            buttonEl.setAttribute("id", data.id.toString());
-            buttonEl.classList.add("link-button");
-            buttonEl.innerHTML = data.name;
-            buttonEl.addEventListener("click", () => {
-                switchView(infoView);
-                currentId = Number(buttonEl.getAttribute("id"));
-                populateInfoView();
-            })
-            liEl.appendChild(buttonEl);
-            searchListEl?.appendChild(liEl);
-        });
+            let tempId = sessionStorage[i].getItem(sessionStorage[i].key!);
+            console.log(tempId);
+            buttonEl.setAttribute("id", tempId!);
+
+
+
+            /* Object.keys(sessionStorage).forEach(key => {
+                let liEl = document.createElement("li");
+                let buttonEl = document.createElement("button");
+                buttonEl.setAttribute("id", key!);
+                buttonEl.classList.add("link-button");
+                buttonEl.innerHTML = sessionStorage.getItem(key)!;
+                buttonEl.addEventListener("click", () => {
+                    switchView(infoView);
+                    currentId = Number(buttonEl.getAttribute("id"));
+                    populateInfoView();
+                })
+                liEl.appendChild(buttonEl);
+                searchListEl?.appendChild(liEl);
+            }); */
+        }
+
+       
     }
 
 
@@ -348,7 +359,7 @@ function checkLength(maxLength: number | null,urlLength: number | null, serachUr
     return serachUrl!;
 }
 
-async function searchForBeer() {
+async function searchForBeer(pageNumber: number | null) {
     
     let searchURL:string | undefined = `${BASE_URL}beers?`;
     let maxLength: number | null = searchURL.length;
@@ -403,7 +414,8 @@ async function searchForBeer() {
         searchURL += `brewed_before${advSearchBrewYearMax}`;
         advSearchBrewYearMax.value ="";
     }
-    /* searchURL +="&per_page=10"  */
+
+    /* searchURL +=`&page=${pageNumber}&per_page=10`; */
     console.log(searchURL);
     let data = await grabBeer(searchURL);
 
@@ -413,12 +425,13 @@ async function searchForBeer() {
         
         for(let i = 0; i < data.length; i++){
             console.log("foor loop");
-            const newData = {id: data[i].id, name:data[i].name};
-            console.log(newData);
-            cachedData!.push(newData);
+            sessionStorage.setItem(data[i].id.toString(), data[i].name);
         }       
-        console.log(cachedData)
-        switchView(searchView)
+        Object.keys(sessionStorage).forEach(key => {
+            console.log(sessionStorage.getItem(key));
+            });
+        
+        switchView(searchView);
         populateSearchView();
         
     }
